@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unbosque.edu.wbsBosque.entity.Equipo;
 import com.unbosque.edu.wbsBosque.entity.EstadisticaEquipo;
+import com.unbosque.edu.wbsBosque.entity.HistoricoEquipo;
 import com.unbosque.edu.wbsBosque.persistence.EquipoPersistence;
 
 import javax.persistence.EntityManager;
@@ -134,6 +135,26 @@ public class EquipoController {
         }
     return  estadisticaEquiposList;
     }
+    
+    @RequestMapping(value="/equipo/historicoPartidosPorEquipo",method=RequestMethod.POST)
+    public List<HistoricoEquipo> historialPartidosPorEquipo(@RequestParam Integer id) {
+        
+        String sql="CALL generarEstadisticaEquipo()";
+        List<HistoricoEquipo> historicoEquiposList= new ArrayList<HistoricoEquipo>();
+        List<Map<String, Object>> rows = this.jdbcTemplate.queryForList("call generarHistorialPartidosPorEquipo(?)", id);
+        
+        for (Map row : rows) {
+            HistoricoEquipo historicoEquipo= new HistoricoEquipo();
+            historicoEquipo.setFecha((String)row.get("fecha"));
+            historicoEquipo.setEquipo1((String)row.get("equipo1"));
+            historicoEquipo.setGolesseleccion1(Integer.parseInt(String.valueOf(row.get("golesseleccion1"))));
+            historicoEquipo.setEquipo2((String)row.get("equipo2"));
+            historicoEquipo.setGolesseleccion2(Integer.parseInt(String.valueOf(row.get("golesseleccion2"))));
+            historicoEquiposList.add(historicoEquipo);
+        }
+    return  historicoEquiposList;
+    }
+    
 
     
  
