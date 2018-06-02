@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unbosque.edu.wbsBosque.entity.Equipo;
 import com.unbosque.edu.wbsBosque.entity.EstadisticaEquipo;
+import com.unbosque.edu.wbsBosque.entity.Ganadores;
 import com.unbosque.edu.wbsBosque.entity.HistoricoEquipo;
 import com.unbosque.edu.wbsBosque.persistence.EquipoPersistence;
 
@@ -95,25 +96,24 @@ public class EquipoController {
         }
         return  estadisticaGeneralList;
 	}
-    
         
-     @RequestMapping(value="/equipo/ganadores",method=RequestMethod.POST)
-	public List<EstadisticaGeneral> ganadores() {
-        String sql ="call generarestadistica();";
-        List<EstadisticaGeneral> estadisticaGeneralList= new ArrayList<EstadisticaGeneral>();
+        
+        @RequestMapping(value="/equipo/ganadores",method=RequestMethod.POST)
+	public List<Ganadores> ganadores() {
+        String sql ="call EstadísticaDefinitivo();";
+        List<Ganadores> estadisticaGeneralList= new ArrayList<Ganadores>();
         List<Map<String, Object>> rows = this.jdbcTemplate.queryForList(sql);
         for (Map row : rows) {
-            EstadisticaGeneral estadisticaGeneral= new EstadisticaGeneral();
+            Ganadores estadisticaGeneral= new Ganadores();
             estadisticaGeneral.setId(Integer.parseInt(String.valueOf(row.get("id"))));
-            estadisticaGeneral.setNombre((String)row.get("equipo"));
-            estadisticaGeneral.setCod_pais((String)row.get("cod_pais"));
-            estadisticaGeneral.setPj(Integer.parseInt(String.valueOf(row.get("pj"))));
-            estadisticaGeneral.setPg(Integer.parseInt(String.valueOf(row.get("pg"))));
-            estadisticaGeneral.setPe(Integer.parseInt(String.valueOf(row.get("pe"))));
-            estadisticaGeneral.setPp(Integer.parseInt(String.valueOf(row.get("pp"))));
-            estadisticaGeneral.setGf(Integer.parseInt(String.valueOf(row.get("gf"))));
-            estadisticaGeneral.setGc(Integer.parseInt(String.valueOf(row.get("gc"))));
-            estadisticaGeneral.setRendimiento(Float.valueOf(String.valueOf(row.get("rendimiento"))));
+            estadisticaGeneral.setNombre((String)row.get("nombre"));
+            estadisticaGeneral.setPj(Integer.parseInt(String.valueOf(row.get("pjugado"))));
+            estadisticaGeneral.setPg(Integer.parseInt(String.valueOf(row.get("pganado"))));
+            estadisticaGeneral.setPe(Integer.parseInt(String.valueOf(row.get("pempatado"))));
+            estadisticaGeneral.setPp(Integer.parseInt(String.valueOf(row.get("pperdido"))));
+            estadisticaGeneral.setGf(Integer.parseInt(String.valueOf(row.get("gfavor"))));
+            estadisticaGeneral.setGc(Integer.parseInt(String.valueOf(row.get("gcontra"))));
+            estadisticaGeneral.setSuma_t(Float.valueOf(String.valueOf(row.get("suma_t"))));
             estadisticaGeneralList.add(estadisticaGeneral);
         }
         return  estadisticaGeneralList;
